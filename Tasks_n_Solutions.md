@@ -1,5 +1,7 @@
 ## MIssion Critical Task
 ### Task 1
+__Objectives__:
+Setting up a virutal enviroment is one of the first step in building a machine learning learning project.
 
 The xFusionCorp Industries data science team needs a standardised Python environment for their new ML project. Set up a virtual environment with the required ML libraries on the controlplane host.
 
@@ -12,6 +14,6 @@ The xFusionCorp Industries data science team needs a standardised Python environ
 ### Solution
 python3 -m venv ml-env - virtual enviroment creation
 source ml-env/bin/activate - activate the virtual environment
-pip install numpy scikit-learn matplotlib
+pip install numpy scikit-learn matplotlib pandas
 pip freeze > requirements.txt
 
