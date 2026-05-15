@@ -21,9 +21,9 @@ pip freeze > requirements.txt
 ### Task 2
 Fixing the correct configuration for the jupyterlab configuration settings
 
-# Jupyter configuration file for the xFusionCorp Industries data science team
+Jupyter configuration file for the xFusionCorp Industries data science team
 
-# --- xFusionCorp team overrides (review before starting the server) ---
+--- xFusionCorp team overrides (review before starting the server) ---
 c.ServerApp.token = ''
 c.ServerApp.password = ''
 c.ServerApp.disable_check_xsrf = True
