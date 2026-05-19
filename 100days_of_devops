@@ -1,0 +1,22 @@
+### Task 1
+__Day 1: Linux User Setup with Non-Interactive Shell__
+
+#### Objective
+- To accommodate the backup agent tool's specifications, the system admin team at xFusionCorp Industries requires the creation of a user with a non-interactive shell.
+- Here's your task:
+- Create a user named rose with a non-interactive shell on App Server 3.
+
+#### Solution
+-Create a user with a non-interactive shell — this means the user can exist on the system (for service/backup purposes) but cannot log in interactively.
+Solution
+- Connect to App Server 3 first (via SSH), then run:
+- useradd — command to create a new user
+-s /sbin/nologin — sets the shell to /sbin/nologin, which is a non-interactive shell (it simply rejects any login attempt)
+- rose — the username
+
+```
+  ssh banner@stapp3 - connct to App Server 3 via ssh
+  sudo useradd -s /sbin/nologin rose 
+  grep rose /etc/passwd  - to check wether it has been effected
+  
+```
