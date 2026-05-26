@@ -20,3 +20,41 @@ Solution
   grep rose /etc/passwd  - to check wether it has been effected
   
 ```
+
+### Task 2
+- As part of the temporary assignment to the Nautilus project, a developer named kareem requires access for a limited duration. 
+- To ensure smooth access management, a temporary user account with an expiry date is needed. Here's what you need to do:
+
+- Create a user named kareem on App Server 2 in Stratos Datacenter. 
+- Set the expiry date to 2027-01-28, ensuring the user is created in lowercase as per standard protocol.
+
+### Solution
+Step 1 — SSH into App Server 2
+In the KodeKloud Stratos Datacenter, App Server 2 is stapp02. SSH into it:
+```
+ssh steve@stapp02
+```
+The default user for App Server 2 is steve. Use the lab-provided password when prompted.
+
+
+- Step 2 — Switch to root
+```
+bashsudo su -
+```
+- Step 3 — Create the user with an expiry date
+```
+useradd -e 2027-01-28 kareem
+```
+-Flag breakdown:
+-e 2027-01-28 Sets the account expiry date in YYYY-MM-DD
+
+Step 4 — Verify the user was created correctly
+```
+chage -l kareem
+```
+- Look for the Account expires line in the output:
+Account expires                         : Jan 28, 2027
+You can also double-check with:
+```
+grep kareem /etc/passwd
+```
