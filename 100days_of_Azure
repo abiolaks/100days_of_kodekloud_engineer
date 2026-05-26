@@ -30,3 +30,109 @@ End Time	Tue May 19 23:51:43 UTC 2026
 ```
 
 ### Solution
+
+Day 1 — Create an Azure Virtual Machine (Ubuntu 24.04 LTS)
+
+Challenge: KodeKloud 100 Days of Azure
+Topic: Azure Virtual Machines
+Difficulty: Beginner
+
+
+📋 Task Summary
+Create an Azure Virtual Machine for the Nautilus DevOps team as part of a cloud migration exercise. The VM must meet specific naming, region, image, size, networking, and storage requirements.
+
+✅ Requirements
+RequirementValueResource GroupUse existing (do not create a new one)VM Namedatacenter-vmRegioneastusOS ImageUbuntu 24.04 LTSVM SizeStandard_B1sNetwork Security GroupDefault NSG with inbound SSH (port 22) allowedOS Disk Size30 GBDisk TypeStandard HDD (Standard_LRS)
+
+🧠 Concepts to Know
+
+Resource Group — A logical container for Azure resources. Always deploy into the correct one.
+VM Size — Standard_B1s is a burstable, low-cost size (1 vCPU, 1 GB RAM). Good for dev/test.
+NSG (Network Security Group) — Acts as a firewall for your VM. The SSH rule opens port 22 for remote access.
+Storage SKU — Standard_LRS = Standard HDD with Locally Redundant Storage. Cheapest disk option.
+Image Alias — Azure uses Ubuntu2404 as the short alias for Ubuntu 24.04 LTS.
+--generate-ssh-keys — Auto-creates an SSH key pair at ~/.ssh/id_rsa if one doesn't exist.
+
+
+🛠️ Step-by-Step Solution
+Step 1 — Log into Azure CLI
+bashaz login \
+  --username <your-username> \
+  --password <your-password>
+
+Step 2 — Find the Existing Resource Group
+bashaz group list --output table
+Note the Name column. You will use it in the next step.
+
+Step 3 — Create the VM
+Replace <RESOURCE_GROUP> with the name from Step 2.
+bashaz vm create \
+  --resource-group <RESOURCE_GROUP> \
+  --name datacenter-vm \
+  --location eastus \
+  --image Ubuntu2404 \
+  --size Standard_B1s \
+  --nsg-rule SSH \
+  --os-disk-size-gb 30 \
+  --storage-sku Standard_LRS \
+  --generate-ssh-keys
+Flag reference:
+FlagWhat it does--name datacenter-vmSets the VM name--location eastusDeploys to East US region--image Ubuntu2404Uses Ubuntu 24.04 LTS image--size Standard_B1sSets VM size--nsg-rule SSHCreates an NSG that allows inbound port 22--os-disk-size-gb 30Sets OS disk to 30 GB--storage-sku Standard_LRSUses Standard HDD disk type--generate-ssh-keysGenerates SSH key pair for login
+
+Step 4 — Get the Public IP Address
+bashaz vm show \
+  --resource-group <RESOURCE_GROUP> \
+  --name datacenter-vm \
+  --show-details \
+  --query publicIps \
+  --output tsv
+
+Step 5 — SSH into the VM
+bashssh -i ~/.ssh/id_rsa azureuser@<PUBLIC_IP>
+
+The default admin username for Ubuntu Azure VMs is azureuser.
+
+
+Step 6 — Verify Inside the VM
+bash# Confirm OS version
+lsb_release -a
+
+# Confirm disk size
+lsblk
+
+# Confirm VM size via instance metadata
+curl -s -H Metadata:true \
+  "http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2021-02-01&format=text"
+
+⚠️ Common Issues & Fixes
+Image name not found
+If Ubuntu2404 throws an error, look up the full image URN:
+bashaz vm image list \
+  --publisher Canonical \
+  --offer ubuntu-24_04-lts \
+  --all \
+  --output table
+Then use the full URN in the --image flag.
+
+SSH key already exists
+If you see a warning about an existing key, it's safe to ignore — Azure CLI reuses ~/.ssh/id_rsa automatically.
+
+Wrong resource group
+Double-check with:
+bashaz group list --output table
+
+📌 Key Takeaways
+
+Always use --nsg-rule SSH when you need SSH access from the CLI — it handles NSG creation automatically.
+Standard_LRS is the correct SKU name for Standard HDD in Azure CLI (not HDD or StandardHDD).
+--generate-ssh-keys is the fastest way to set up key-based auth on a lab VM.
+The [tool.ruff.lint] section placement matters — Azure CLI flag names are exact and case-sensitive.
+Azure assigns azureuser as the default admin account for Ubuntu images unless overridden with --admin-username.
+
+
+🔗 References
+
+az vm create — Microsoft Docs
+Azure VM Sizes
+Ubuntu on Azure — Canonical
+Azure NSG Overview
