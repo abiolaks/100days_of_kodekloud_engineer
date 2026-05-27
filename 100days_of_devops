@@ -58,3 +58,32 @@ You can also double-check with:
 ```
 grep kareem /etc/passwd
 ```
+
+### Task 2
+- Following security audits, the xFusionCorp Industries security team has rolled out new protocols, including the restriction of direct root SSH login.
+- Your task is to disable direct SSH root login on all app servers within the Stratos Datacenter.
+
+### Solution
+Here's how to disable direct SSH root login on all app servers:
+What needs to change: In /etc/ssh/sshd_config, set PermitRootLogin no, then restart the SSH service.
+Do this on each app server (stapp01, stapp02, stapp03):
+bash# SSH into each server (example for stapp01)
+ssh tony@stapp01
+
+```
+# Once in, switch to root
+sudo su -
+
+# Edit the SSH config
+sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+
+# Verify the change
+grep PermitRootLogin /etc/ssh/sshd_config
+
+# Restart SSH service
+systemctl restart sshd
+Repeat with steve@stapp02 and banner@stapp03.
+
+# Should return "no"
+sshd -T | grep permitrootlogin
+```
