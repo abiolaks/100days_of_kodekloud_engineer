@@ -105,3 +105,37 @@ ls -l /tmp/xfusioncorp.sh
 # run give it read and execute permission. as we can't execute without read permission
 sudo chmod a+rx /tmp/xfusioncorp.sh
 ```
+
+### Task 5
+- Following a security audit, the xFusionCorp Industries security team has opted to enhance application and server security with SELinux. To initiate testing, - -- the following requirements have been established for App server 1 in the Stratos Datacenter:
+
+- Install the required SELinux packages.
+- Permanently disable SELinux for the time being; it will be re-enabled after necessary configuration changes.
+- No need to reboot the server, as a scheduled maintenance reboot is already planned for tonight.
+- Disregard the current status of SELinux via the command line; the final status after the reboot should be disabled.
+
+### Solution
+```
+- login into the app server
+ssh tony@stapp01
+
+- put the password
+- switch to the root
+sudo su -
+-enter the password
+- install the SElinus using yum
+yum install -y selinux-policy selinux-policy-targeted libselinux-utils policycoreutils
+
+- vi open the config files
+vi /etc/selinux/config
+
+- find this line
+SELINUX=enforcing
+
+- change it to disabled
+SELINUX=disabled
+
+- verify
+cat /etc/selinux/config | grep SELINUX=
+
+```
