@@ -139,39 +139,4 @@ SELINUX=disabled
 cat /etc/selinux/config | grep SELINUX=
 
 ```
-### Track 6
-- The Nautilus DevOps team is strategically planning the migration of a portion of their infrastructure to the Azure cloud.
-- Acknowledging the magnitude of this endeavor, they have chosen to tackle the migration incrementally rather than as a single, massive transition.
-- Their approach involves creating Virtual Networks (VNets) as the initial step, as they will be provisioning various services under different VNets.
 
-- Create a Virtual Network (VNet) named devops-vnet in the southcentralus region with 192.168.0.0/24 IPv4 CIDR.
-
-
-
-- Use below given Azure Credentials: (You can run the showcreds command on the azure-client host to retrieve credentials)
-
-### Solution
-# Login with the service principal, you get this from using showcreds on the cli- get the azure application client id and  azure client secret
-az login --service-principal \
-  --username d6c4c35c-1992-430f-a440-a2c1834fcffc \
-  --password "azure client secret" \
-  --tenant azurefreekmlprod.onmicrosoft.com
-
-# Find the resource group name and copy it
-az group list --query "[].name" -o table
-
-# Create the VNet
-az network vnet create \
-  --name devops-vnet \
-  --resource-group <resource-group-name> \
-  --location southcentralus \
-  --address-prefix 192.168.0.0/24
-
-# Verify it was created
-az network vnet show \
-  --name devops-vnet \
-  --resource-group <resource-group-name> \
-  --query "{name:name, location:location, addressSpace:addressSpace}" \
-  -o table
-
-```
