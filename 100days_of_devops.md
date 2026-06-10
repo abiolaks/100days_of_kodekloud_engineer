@@ -139,4 +139,77 @@ SELINUX=disabled
 cat /etc/selinux/config | grep SELINUX=
 
 ```
+### Task 6
+- The `Nautilus` system admins team has prepared scripts to automate several day-to-day tasks.
+- They want them to be deployed on all app servers in `Stratos DC` on a set schedule. Before that they need to test similar functionality with a sample cron job. - Therefore, perform the steps below:
+a. Install `cronie` package on all `Nautilus` app servers and start `crond` service.
+b. Add a cron `*/5 * * * * echo hello > /tmp/cron_text` for `root` user.
+
+### Solution
+```
+What is Cron?
+A cron is a time-based job scheduler in Linux. It runs commands/scripts automatically at specified times/intervals — without you being there.
+What is Cronie?
+Cronie is the package that provides the cron daemon (crond) on RHEL/CentOS systems. It's the service that watches your cron jobs and executes them.
+cronie = the package you install
+crond  = the service/daemon that runs in background
+crontab = the file where you define your scheduled jobs
+Reading the Cron Syntax
+*/5 * * * *  echo hello > /tmp/cron_text
+
+ │   │ │ │ │
+ │   │ │ │ └── Day of week (0-7, Sun=0)
+ │   │ │ └──── Month (1-12)
+ │   │ └────── Day of month (1-31)
+ │   └──────── Hour (0-23)
+ └──────────── Minute - */5 means "every 5 minutes"
+So this job runs every 5 minutes, echoes "hello" into /tmp/cron_text.
+
+How to Solve It
+The Nautilus lab typically has 3 app servers (stapp01, stapp02, stapp03). You need to do this on all three.
+
+Step 1 — SSH into each app server
+From the jump host:
+bash# App Server 1
+ssh tony@stapp01
+
+# App Server 2  
+ssh steve@stapp02
+
+# App Server 3
+ssh banner@stapp03
+
+Passwords are usually Ir0nM@n, Am3ric@ and BigGr33n respectively — check your lab credentials.
+
+
+Step 2 — On EACH app server, run these commands
+bash# Switch to root
+sudo su -
+
+# Install cronie
+yum install -y cronie
+
+# Start the crond service
+systemctl start crond
+
+# Enable it so it survives reboots
+systemctl enable crond
+
+# Verify it's running
+systemctl status crond
+
+Step 3 — Add the cron job for root user
+bash# Open root's crontab
+crontab -e
+This opens a text editor (vi). Add this line:
+*/5 * * * * echo hello > /tmp/cron_text
+Save and exit — in vi: press Esc, type :wq, hit Enter.
+OR do it without opening the editor (cleaner for automation):
+bash(crontab -l 2>/dev/null; echo "*/5 * * * * echo hello > /tmp/cron_text") | crontab -
+
+Step 4 — Verify the cron job was added
+bashcrontab -l
+Expected output:
+*/5 * * * * echo hello > /tmp/cron_text
+```
 
