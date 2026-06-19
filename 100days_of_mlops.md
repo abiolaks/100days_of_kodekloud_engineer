@@ -392,4 +392,13 @@ stages:
 - dvc status
 if the first command run without error you are good"
 ```
+### Task 15
+Day 15: Parameterize a DVC Pipeline
+
+### Solution
+```
+- create the params.yml
+add
+n_estimators=200
+```
 
