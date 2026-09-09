@@ -213,3 +213,14 @@ Expected output:
 */5 * * * * echo hello > /tmp/cron_text
 ```
 
+# Task 8
+Install ansible and ensure it is global
+```
+sudo -
+pip3 install ansible==4.9.0
+
+# enable symbolic link for global acess
+ln -sf /usr/local/bin/ansible /usr/bin/ansible
+ln -sf /usr/local/bin/ansible-playbook /usr/bin/ansible-playbook
+```
+
